@@ -24,7 +24,7 @@ namespace CRMAssemblyLoader
             if (args.Length < 2)
             {
                 Console.WriteLine("Not enough arguments");
-                return;
+                Environment.Exit(1);
             }
             connectionString = args[0];
             path = args[1];
@@ -41,13 +41,13 @@ namespace CRMAssemblyLoader
                 var result = service.RetrieveMultiple(query);
                 Entity pluginAssembly = result.Entities[0];
 
-                List<Entity> currentPlugins =  ListPluginSteps(pluginAssembly.Id);
-                Dictionary<string,Guid> registeredPluginSteps = new Dictionary<string, Guid>();
+                List<Entity> currentPlugins = ListPluginSteps(pluginAssembly.Id);
+                Dictionary<string, Guid> registeredPluginSteps = new Dictionary<string, Guid>();
                 Console.WriteLine("Checking for missing plugins in source assembly");
                 foreach (Entity e in currentPlugins)
                 {
                     string fullName = (string)e["typename"];
-                    registeredPluginSteps.Add(fullName,e.Id);
+                    registeredPluginSteps.Add(fullName, e.Id);
                     bool shouldStop = false;
                     if (!Plugins.ContainsKey(fullName))
                     {
@@ -95,6 +95,11 @@ namespace CRMAssemblyLoader
                 }
 
 
+            }
+            else
+            {
+                Console.WriteLine("Can't load assembly");
+                Environment.Exit(2);
             }
             Console.WriteLine("All done");
         }

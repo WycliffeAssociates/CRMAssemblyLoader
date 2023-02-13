@@ -34,6 +34,13 @@ namespace CRMAssemblyLoader
 
                 var file = File.ReadAllBytes(path);
                 service = new CrmServiceClient(connectionString);
+                if (!string.IsNullOrEmpty(service.LastCrmError))
+                {
+                    Console.WriteLine("Error connecting");
+                    Console.WriteLine(service.LastCrmError);
+                    Environment.Exit(1);
+                }
+
 
                 QueryExpression query = new QueryExpression("pluginassembly");
                 query.ColumnSet = new ColumnSet("content");
